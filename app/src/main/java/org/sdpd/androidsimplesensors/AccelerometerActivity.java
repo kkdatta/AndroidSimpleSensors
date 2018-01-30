@@ -6,6 +6,7 @@ package org.sdpd.androidsimplesensors;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -38,8 +39,8 @@ public class AccelerometerActivity extends Activity implements SensorEventListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accelerometer);
-        initializeViews();
+//        setContentView(R.layout.activity_accelerometer);
+//        initializeViews();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
@@ -57,15 +58,15 @@ public class AccelerometerActivity extends Activity implements SensorEventListen
 
     }
 
-    public void initializeViews() {
-        currentX = (TextView) findViewById(R.id.currentX);
-        currentY = (TextView) findViewById(R.id.currentY);
-        currentZ = (TextView) findViewById(R.id.currentZ);
-
-//        maxX = (TextView) findViewById(R.id.maxX);
-//        maxY = (TextView) findViewById(R.id.maxY);
-//        maxZ = (TextView) findViewById(R.id.maxZ);
-    }
+//    public void initializeViews() {
+//        currentX = (TextView) findViewById(R.id.currentX);
+//        currentY = (TextView) findViewById(R.id.currentY);
+//        currentZ = (TextView) findViewById(R.id.currentZ);
+//
+////        maxX = (TextView) findViewById(R.id.maxX);
+////        maxY = (TextView) findViewById(R.id.maxY);
+////        maxZ = (TextView) findViewById(R.id.maxZ);
+//    }
 
     //onResume() register the accelerometer for listening the events
     protected void onResume() {
@@ -88,12 +89,12 @@ public class AccelerometerActivity extends Activity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
 
         // clean current values
-        displayCleanValues();
+        //displayCleanValues();
         // display the current x,y,z accelerometer values
-        displayCurrentValues();
+        //displayCurrentValues();
         // display the max x,y,z accelerometer values
 //        displayMaxValues();
-
+        changebackground();
         // get the change of the x,y,z values of the accelerometer
         deltaX = Math.abs(lastX - event.values[0]);
         deltaY = Math.abs(lastY - event.values[1]);
@@ -109,33 +110,76 @@ public class AccelerometerActivity extends Activity implements SensorEventListen
         }
     }
 
-    public void displayCleanValues() {
-        currentX.setText("0.0");
-        currentY.setText("0.0");
-        currentZ.setText("0.0");
+    public void changebackground() {
+        try {
+//            Integer intdeltax = Integer.parseInt(Float.toString(deltaX));
+//            Integer intdeltay = Integer.parseInt(Float.toString(deltaY));
+//            Integer intdeltaz = Integer.parseInt(Float.toString(deltaZ));
+
+            int intdeltax = (int) (Math.round(deltaX));
+            int intdeltay = (int) (Math.round(deltaY));
+            int intdeltaz = (int) (Math.round(deltaZ));
+
+            if ((intdeltax | intdeltay | intdeltaz) <= 2) {
+                getWindow().getDecorView().setBackgroundColor(Color.RED);
+            } else if (((intdeltax | intdeltay | intdeltaz) > 2 && (intdeltax | intdeltay | intdeltaz) <= 4)) {
+                getWindow().getDecorView().setBackgroundColor(Color.BLUE);
+
+            } else if (((intdeltax | intdeltay | intdeltaz) > 4 && (intdeltax | intdeltay | intdeltaz) <= 6)) {
+                getWindow().getDecorView().setBackgroundColor(Color.GREEN);
+
+            } else if (((intdeltax | intdeltay | intdeltaz) > 6 && (intdeltax | intdeltay | intdeltaz) <= 8)) {
+                getWindow().getDecorView().setBackgroundColor(Color.GRAY);
+
+
+            } else if (((intdeltax | intdeltay | intdeltaz) > 8 && (intdeltax | intdeltay | intdeltaz) <= 10)) {
+                getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+
+
+            } else if (((intdeltax | intdeltay | intdeltaz) > 10 && (intdeltax | intdeltay | intdeltaz) <= 12)) {
+                getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
+
+
+            } else if (((intdeltax | intdeltay | intdeltaz) > 12 && (intdeltax | intdeltay | intdeltaz) <= 15)) {
+                getWindow().getDecorView().setBackgroundColor(Color.MAGENTA);
+
+
+            } else {
+                getWindow().getDecorView().setBackgroundColor(Color.CYAN);
+            }
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+
     }
+
+//    public void displayCleanValues() {
+//        currentX.setText("0.0");
+//        currentY.setText("0.0");
+//        currentZ.setText("0.0");
+//    }
 
     // display the current x,y,z accelerometer values
-    public void displayCurrentValues() {
-        currentX.setText(Float.toString(deltaX));
-        currentY.setText(Float.toString(deltaY));
-        currentZ.setText(Float.toString(deltaZ));
-    }
+//    public void displayCurrentValues() {
+//        currentX.setText(Float.toString(deltaX));
+//        currentY.setText(Float.toString(deltaY));
+//        currentZ.setText(Float.toString(deltaZ));
+//    }
 
     // display the max x,y,z accelerometer values
-    public void displayMaxValues() {
-        if (deltaX > deltaXMax) {
-            deltaXMax = deltaX;
-            maxX.setText(Float.toString(deltaXMax));
-        }
-        if (deltaY > deltaYMax) {
-            deltaYMax = deltaY;
-            maxY.setText(Float.toString(deltaYMax));
-        }
-        if (deltaZ > deltaZMax) {
-            deltaZMax = deltaZ;
-            maxZ.setText(Float.toString(deltaZMax));
-        }
-    }
+//    public void displayMaxValues() {
+//        if (deltaX > deltaXMax) {
+//            deltaXMax = deltaX;
+//            maxX.setText(Float.toString(deltaXMax));
+//        }
+//        if (deltaY > deltaYMax) {
+//            deltaYMax = deltaY;
+//            maxY.setText(Float.toString(deltaYMax));
+//        }
+//        if (deltaZ > deltaZMax) {
+//            deltaZMax = deltaZ;
+//            maxZ.setText(Float.toString(deltaZMax));
+//        }
+//    }
 }
 
